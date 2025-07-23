@@ -61,30 +61,36 @@ public enum FFFFakePlayerTaskManager
 	public List<AAAAITask> getAITasks(){
 		return _aiTasks;
 	}
-    public void startTask(FFFFakePlayer bot) {
-        // Ενημέρωση tasks για να καλύπτουν όλους τους bots
-        adjustTaskSize();
+	public void startTask(FFFFakePlayer bot) {
+	    // Ενημέρωση tasks για να καλύπτουν όλους τους bots
+	    adjustTaskSize();
 
-        // Πάρε τη λίστα με τους active fake players από το manager
-        List<Player> activeFakePlayers = FFFFakePlayerManager.INSTANCE.getActiveFakePlayers();
+	    // Πάρε τη λίστα με τους active fake players από το manager
+	    List<Player> activeFakePlayers = FFFFakePlayerManager.INSTANCE.getActiveFakePlayers();
 
-        // Βρες το index του bot στη λίστα
-        int index = activeFakePlayers.indexOf(bot);
+	    // Βρες το index του bot στη λίστα
+	    int index = activeFakePlayers.indexOf(bot);
 
-        if (index == -1) {
-            // Αν ο bot δεν υπάρχει στη λίστα, πρόσθεσέ τον
-            activeFakePlayers.add(bot);
-            index = activeFakePlayers.size() - 1;
-        }
+	    if (index == -1) {
+	        // Αν ο bot δεν υπάρχει στη λίστα, πρόσθεσέ τον
+	        activeFakePlayers.add(bot);
+	        index = activeFakePlayers.size() - 1;
+	    }
 
-        // Υπολογισμός σε ποιο task πρέπει να μπει
-        int taskIndex = index / _playerCountPerTask;
-        if (taskIndex >= _aiTasks.size()) {
-            taskIndex = _aiTasks.size() - 1; // fallback
-        }
+	    // Υπολογισμός σε ποιο task πρέπει να μπει
+	    int taskIndex = index / _playerCountPerTask;
+	    if (taskIndex >= _aiTasks.size()) {
+	        taskIndex = _aiTasks.size() - 1; // fallback
+	    }
 
-        // Πάρε το task και πρόσθεσε το bot
-        AAAAITask task = _aiTasks.get(taskIndex);
-        task.addBot(bot);
-    }
+	    // Πάρε το task και πρόσθεσε το bot
+	    AAAAITask task = _aiTasks.get(taskIndex);
+	    task.addBot(bot);
+	}
+
+	public void removeFromTasks(FFFFakePlayer bot) {
+	    for (AAAAITask task : _aiTasks) {
+	        task.removeBot(bot);
+	    }
+	}
 }

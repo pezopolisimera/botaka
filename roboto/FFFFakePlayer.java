@@ -490,6 +490,9 @@ public class FFFFakePlayer extends Player
             getClan().broadcastToOnlineMembers(new PledgeShowMemberListUpdate(this));
         }
 
+                FFFFakePlayerManager.INSTANCE.removeActiveFakePlayer(this);
+                FFFFakePlayerTaskManager.INSTANCE.removeFromTasks(this);       
+        
         // Remove the player from the world
         World.getInstance().removeObject(this);
 

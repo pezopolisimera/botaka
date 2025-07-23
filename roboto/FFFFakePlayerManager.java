@@ -44,7 +44,13 @@ public enum FFFFakePlayerManager {
     public List<String> getLatestAutoSpawnedBotNames() {
         return autoSpawnedBotNames;
     }
-
+    
+    public void removeActiveFakePlayer(FFFFakePlayer bot) {
+        ACTIVE_FAKE_PLAYERS.remove(bot);
+        autoSpawnedBotNames.remove(bot.getName());
+        gmSpawnedBotNames.remove(bot.getName());
+    }
+    
     public void initialise() {
         FFFFakePlayerNameManager.INSTANCE.initialise();
         FFFFakePlayerTaskManager.INSTANCE.initialise();
