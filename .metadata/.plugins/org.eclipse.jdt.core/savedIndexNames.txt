@@ -1,8 +1,0 @@
-INDEX VERSION 1.134+C:\GitHub\botaka\.metadata\.plugins\org.eclipse.jdt.core
-1838031925.index
-3343005812.index
-2168517007.index
-684336168.index
-4285211087.index
-1865797976.index
-1975885339.index

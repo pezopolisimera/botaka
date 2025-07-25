@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="dre.elfocrash.roboto.FFFFakePlayer"/>
-    <fullyQualifiedTypeName name="dre.elfocrash.roboto.helpers.FFFFakePMResponder"/>
-    <fullyQualifiedTypeName name="net.sf.l2j.commons.random.Rnd"/>
-    <fullyQualifiedTypeName name="javax.swing.text.html.HTMLDocument.Iterator"/>
-    <fullyQualifiedTypeName name="java.util.Iterator"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
-</qualifiedTypeNameHistroy>
