@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="int totalPages = (int) Math.ceil(total / 10.0);"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="int totalPages = (int) Math.ceil(total / 10.0);"/>
+			<item value="int start = (page - 1) * 10;"/>
+			<item value=" html.replace(&quot;%prevpage%&quot;, page &gt; 1 ? &quot;&lt;a action=\&quot;bypass admin_autopage &quot; + (page - 1) + &quot;\&quot;&gt;Previous&lt;/a&gt;&quot; : &quot;&quot;);"/>
+			<item value=" html.replace(&quot;%nextpage%&quot;, &quot;&lt;a action=\&quot;bypass admin_gmpage &quot; + (page + 1) + &quot;\&quot;&gt;Next&lt;/a&gt;&quot;);"/>
+			<item value="activeChar.getX(), activeChar.getY()"/>
+			<item value="classDesired, true"/>
+			<item value="FFFFakePlayerManager.INSTANCE.spawnPlayers(fakeCount, fakeRadius, activeChar.getX(), activeChar.getY(), activeChar.getZ(), classDesired, true);"/>
+			<item value=" html.replace(&quot;%prevpage%&quot;, page &gt; 1 ? &quot;&lt;a action=\&quot;bypass admin_gmpage &quot; + (page - 1) + &quot;\&quot;&gt;Previous&lt;/a&gt;&quot; : &quot;&quot;);"/>
+			<item value="refreshauto"/>
+			<item value="private String "/>
+			<item value="-        if (p.isOnline() == false || p.isTeleporting() || p.isInvisible()) {"/>
+			<item value="FFFFakePlayerNameManager.INSTANCE.initialise();"/>
+			<item value="String botName = command.substring(&quot;admin_deletebot &quot;.length()).trim();"/>
+			<item value="public int getFFFFakePlayersCount() {"/>
+			<item value="public boolean useAdminCommand(String command, Player activeChar)"/>
+		</list>
+		<list key="replacehistory">
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+	</section>
+</section>

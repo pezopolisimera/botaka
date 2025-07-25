@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.network{SystemMessageId.java[SystemMessageId" modifiers="17" timestamp="1752877302749"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.network.clientpackets{RequestSendFriendMsg.java[RequestSendFriendMsg" modifiers="17" timestamp="1752959137985"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{CCCCardinalAI.java[CCCCardinalAI" modifiers="1" timestamp="1752960860225"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{CCCCombatAI.java[CCCCombatAI" modifiers="1025" timestamp="1752877287844"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayer.java[FFFFakePlayer" modifiers="1" timestamp="1752959339072"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayerManager.java[FFFFakePlayerManager" modifiers="16385" timestamp="1753103891859"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.admincommands{AAAAdminFFFFakePlayers.java[AAAAdminFFFFakePlayers" modifiers="1" timestamp="1753134754153"/>
+</typeInfoHistroy>
