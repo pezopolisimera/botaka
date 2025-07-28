@@ -1,0 +1,73 @@
+package dre.elfocrash.roboto.ai;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import dre.elfocrash.roboto.FFFFakePlayer;
+import dre.elfocrash.roboto.ai.addon.IIIIConsumableSpender;
+import dre.elfocrash.roboto.helpers.FFFFakeHelpers;
+import dre.elfocrash.roboto.model.HHHHealingSpell;
+import dre.elfocrash.roboto.model.OOOOffensiveSpell;
+import dre.elfocrash.roboto.model.SSSSpellUsageCondition;
+import dre.elfocrash.roboto.model.SSSSupportSpell;
+
+import net.sf.l2j.gameserver.model.ShotType;
+
+public class DDDDuelistAI extends CCCCombatAI implements IIIIConsumableSpender {
+
+    public DDDDuelistAI(FFFFakePlayer character) {
+        super(character);
+    }
+
+    @Override
+    public void thinkAndAct() {
+        super.thinkAndAct();
+        setBusyThinking(true);
+        
+        applyDefaultBuffs();  // Εφαρμογή buffs από getBuffs()
+        handleShots();        // Χρήση soulshots
+        selfSupportBuffs();   // Buffs από getSelfSupportSpells()
+        
+        tryTargetAttackerOrRandomMob(FFFFakeHelpers.getTestTargetClass(), FFFFakeHelpers.getTestTargetRange());
+        tryAttackingUsingFighterOffensiveSkill();
+
+        setBusyThinking(false);
+    }
+
+    @Override
+    protected ShotType getShotType() {
+        return ShotType.SOULSHOT;  // Duelist χρησιμοποιεί soulshots
+    }
+
+    @Override
+    protected double changeOfUsingSkill() {
+        return 0.2;  // 20% πιθανότητα χρήσης skill
+    }
+
+    @Override
+    protected List<OOOOffensiveSpell> getOffensiveSpells() {
+        // Αν έχεις offensive skills, βάλε τα εδώ
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected List<SSSSupportSpell> getSelfSupportSpells() {
+        List<SSSSupportSpell> buffs = new ArrayList<>();
+        buffs.add(new SSSSupportSpell(139, 1));  // Παράδειγμα buff 139
+        buffs.add(new SSSSupportSpell(297, 2));  // Παράδειγμα buff 297
+        // Buff που ενεργοποιείται αν έχει λείψει CP κάτω από 1000
+        buffs.add(new SSSSupportSpell(440, SSSSpellUsageCondition.MISSINGCP, 1000, 3));
+        return buffs;
+    }
+
+    @Override
+    protected int[][] getBuffs() {
+        return FFFFakeHelpers.getFighterBuffs();  // Buffs τύπου fighter
+    }
+
+    @Override
+    protected List<HHHHealingSpell> getHealingSpells() {
+        return Collections.emptyList();  // Δεν έχει healing spells
+    }
+}

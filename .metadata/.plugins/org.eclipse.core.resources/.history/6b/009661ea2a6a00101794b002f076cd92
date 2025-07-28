@@ -1,0 +1,268 @@
+package dre.elfocrash.roboto.ai;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import dre.elfocrash.roboto.FFFFakePlayer;
+import dre.elfocrash.roboto.ai.addon.IIIIConsumableSpender;
+import dre.elfocrash.roboto.helpers.FFFFakeHelpers;
+import dre.elfocrash.roboto.model.HHHHealingSpell;
+import dre.elfocrash.roboto.model.OOOOffensiveSpell;
+import dre.elfocrash.roboto.model.SSSSupportSpell;
+import dre.elfocrash.roboto.pm.PMReplyHelper;
+
+import net.sf.l2j.commons.random.Rnd;
+import net.sf.l2j.gameserver.model.ShotType;
+import net.sf.l2j.gameserver.model.WorldObject;
+import net.sf.l2j.gameserver.model.actor.Creature;
+import net.sf.l2j.gameserver.model.actor.ai.CtrlIntention;
+import net.sf.l2j.gameserver.model.actor.instance.Player;
+
+public class SSSSoultakerAI extends CCCCombatAI implements IIIIConsumableSpender {
+    private final int boneId = 2508;
+    private long _lastPvPTime = 0;
+    private boolean _inAutoDefend = false;
+
+    private long _lastActTime = 0;
+    private long _lastTargetSwitchTime = 0;
+    private long _lastCastDelayTime = 0;
+    private long _lastPostKillDelayTime = 0;
+
+    // Νέος χρόνος για timeout follow
+    private long _lastFollowUpdateTime = 0;
+
+    private void resetAfterPvP() {
+        _inAutoDefend = false;
+        _lastPvPTime = 0;
+        _lastFollowUpdateTime = 0;
+        _ffffakePlayer.setTarget(null);
+        _ffffakePlayer.getAI().setIntention(CtrlIntention.ACTIVE);
+        System.out.println("[SoultakerAI] resetAfterPvP called, intention set to ACTIVE");
+    }
+
+    public SSSSoultakerAI(FFFFakePlayer character) {
+        super(character);
+    }
+
+    public void onPrivateMessage(String fromPlayerName, String messageText) {
+        _ffffakePlayer.onPrivateMessageReceived(fromPlayerName, messageText);
+    }
+
+    @Override
+    public void thinkAndAct() {
+        synchronized (_ffffakePlayer) {
+            PMReplyHelper.tryReply(_ffffakePlayer);
+        }
+
+        long now = System.currentTimeMillis();
+
+        if (now - _lastActTime < Rnd.get(500, 1500)) {
+            System.out.println("[SoultakerAI] Skipping due to _lastActTime delay");
+            return;
+        }
+        _lastActTime = now;
+
+        if (now - _lastTargetSwitchTime < Rnd.get(200, 500)) {
+            System.out.println("[SoultakerAI] Skipping due to _lastTargetSwitchTime delay");
+            return;
+        }
+
+        handleDeath();
+
+        List<Player> alliesUnderAttack = _ffffakePlayer.getKnownType(Player.class).stream()
+            .filter(p -> isSameClanOrAlliance(p) && !p.isDead())
+            .filter(p -> p.getTarget() instanceof Player)
+            .filter(p -> {
+                Player attacker = (Player) p.getTarget();
+                return attacker != null && !attacker.isDead() && !attacker.isGM()
+                    && (attacker.getPvpFlag() > 0 || attacker.getKarma() > 0)
+                    && !isSameClanOrAlliance(attacker);
+            })
+            .collect(Collectors.toList());
+
+        if (!alliesUnderAttack.isEmpty()) {
+            Player ally = alliesUnderAttack.get(0);
+            Player attacker = (Player) ally.getTarget();
+            System.out.println("[SoultakerAI] Defending ally attacked by: " + attacker.getName());
+            _ffffakePlayer.setTarget(attacker);
+            tryAttackingUsingMageOffensiveSkill();
+            _lastPvPTime = now;
+            _inAutoDefend = true;
+            _lastTargetSwitchTime = now;
+            _lastFollowUpdateTime = now;
+            return;
+        }
+
+        List<Player> attackers = _ffffakePlayer.getKnownType(Player.class).stream()
+            .filter(p -> p.getTarget() == _ffffakePlayer && !p.isDead())
+            .filter(p -> _ffffakePlayer.isInsideRadius(p, 1000, true, false))
+            .filter(p -> !p.isGM() && !isSameClanOrAlliance(p))
+            .filter(p -> p.getPvpFlag() > 0 || p.getKarma() > 0)
+            .collect(Collectors.toList());
+
+        if (!attackers.isEmpty()) {
+            Creature threat = attackers.get(0);
+            System.out.println("[SoultakerAI] Under attack by: " + threat.getName());
+            _ffffakePlayer.setTarget(threat);
+            tryAttackingUsingMageOffensiveSkill();
+            _lastPvPTime = now;
+            _inAutoDefend = true;
+            _lastTargetSwitchTime = now;
+            _lastFollowUpdateTime = now;
+            return;
+        }
+
+        if (_inAutoDefend) {
+            System.out.println("[SoultakerAI] In AutoDefend mode");
+
+            WorldObject target = _ffffakePlayer.getTarget();
+
+            // Safe known check without knows()
+            boolean targetKnown = target != null && _ffffakePlayer.getKnownType(WorldObject.class).contains(target);
+            if (target == null || !targetKnown) {
+                System.out.println("[SoultakerAI] Target null or unknown, resetting...");
+                resetAfterPvP();
+                return;
+            }
+
+            if (target instanceof Player) {
+                Player p = (Player) target;
+                System.out.println("[SoultakerAI] Target is player: " + p.getName());
+
+                if (p.isDead()) {
+                    System.out.println("[SoultakerAI] Player is dead. Resetting...");
+                    resetAfterPvP();
+                    return;
+                }
+
+                if (p.isGM()) {
+                    System.out.println("[SoultakerAI] Target is GM. Resetting...");
+                    resetAfterPvP();
+                    return;
+                }
+
+                if (isSameClanOrAlliance(p)) {
+                    System.out.println("[SoultakerAI] Same clan/alliance. Resetting...");
+                    resetAfterPvP();
+                    return;
+                }
+
+                if (p.getPvpFlag() == 0 && p.getKarma() == 0) {
+                    System.out.println("[SoultakerAI] Player has no PvP/Karma. Resetting...");
+                    resetAfterPvP();
+                    return;
+                }
+            }
+
+            if (target instanceof Creature) {
+                Creature creatureTarget = (Creature) target;
+                System.out.println("[SoultakerAI] Target is creature: " + creatureTarget.getName());
+
+                if (creatureTarget.isDead()) {
+                    System.out.println("[SoultakerAI] Target creature is dead. Resetting...");
+                    resetAfterPvP();
+                    return;
+                }
+
+                tryAttackingUsingMageOffensiveSkill();
+
+                // Follow logic with timeout to prevent freeze
+                if (!_ffffakePlayer.isInsideRadius(creatureTarget, 600, true, false)) {
+                    System.out.println("[SoultakerAI] Target too far, following...");
+                    _ffffakePlayer.setRunning();
+                    _ffffakePlayer.getAI().setIntention(CtrlIntention.FOLLOW, creatureTarget);
+
+                    // Update last follow command time
+                    _lastFollowUpdateTime = now;
+                } else {
+                    // Close enough - attack intention
+                    if (_ffffakePlayer.getAI().getIntention() != CtrlIntention.ATTACK) {
+                        System.out.println("[SoultakerAI] Within range, switching to ATTACK intention");
+                        _ffffakePlayer.getAI().setIntention(CtrlIntention.ATTACK, creatureTarget);
+                    }
+                }
+
+                // Timeout for follow to prevent freeze
+                if (now - _lastFollowUpdateTime > 10000) {
+                    System.out.println("[SoultakerAI] Follow timeout reached, resetting intention to ACTIVE");
+                    _ffffakePlayer.getAI().setIntention(CtrlIntention.ACTIVE);
+                    _lastFollowUpdateTime = now;
+                }
+            }
+
+            if (now - _lastPvPTime >= 3000) {
+                System.out.println("[SoultakerAI] PvP timeout passed. Resetting...");
+                resetAfterPvP();
+                return;
+            }
+
+            System.out.println("[SoultakerAI] Still in PvP defend mode.");
+            return;
+        }
+
+        setBusyThinking(true);
+        applyDefaultBuffs();
+        handleConsumable(_ffffakePlayer, boneId);
+        handleShots();
+        tryTargetAttackerOrRandomMob(FFFFakeHelpers.getTestTargetClass(), FFFFakeHelpers.getTestTargetRange());
+
+        WorldObject mobTarget = _ffffakePlayer.getTarget();
+        if (mobTarget instanceof Creature) {
+            Creature mob = (Creature) mobTarget;
+
+            if (!mob.isDead()) {
+                if (now - _lastCastDelayTime < Rnd.get(150, 400)) {
+                    System.out.println("[SoultakerAI] Skipping cast delay");
+                    return;
+                }
+                tryAttackingUsingMageOffensiveSkill();
+                _lastCastDelayTime = now;
+            } else {
+                if (now - _lastPostKillDelayTime < Rnd.get(500, 1000)) {
+                    System.out.println("[SoultakerAI] Skipping post-kill delay");
+                    return;
+                }
+                _lastPostKillDelayTime = now;
+            }
+        }
+
+        selfSupportBuffs();
+        setBusyThinking(false);
+
+        System.out.println("[SoultakerAI] End of thinkAndAct()");
+    }
+
+    @Override
+    protected ShotType getShotType() {
+        return ShotType.BLESSED_SPIRITSHOT;
+    }
+
+    @Override
+    protected List<OOOOffensiveSpell> getOffensiveSpells() {
+        List<OOOOffensiveSpell> spells = new ArrayList<>();
+        spells.add(new OOOOffensiveSpell(1234, 28)); // Death Spike
+        spells.add(new OOOOffensiveSpell(1148, 20)); // Vampiric Claw
+        spells.add(new OOOOffensiveSpell(1343, 12)); // Gloom or Anchor
+        spells.add(new OOOOffensiveSpell(1239, 15)); // Curse Death Link
+        spells.add(new OOOOffensiveSpell(1262, 5));  // Transfer Pain
+        spells.add(new OOOOffensiveSpell(1310, 3));  // Body to Mind
+        return spells;
+    }
+
+    @Override
+    protected int[][] getBuffs() {
+        return FFFFakeHelpers.getMageBuffs();
+    }
+
+    @Override
+    protected List<HHHHealingSpell> getHealingSpells() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    protected List<SSSSupportSpell> getSelfSupportSpells() {
+        return Collections.emptyList();
+    }
+}

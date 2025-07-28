@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.network{SystemMessageId.java[SystemMessageId" modifiers="17" timestamp="1752877302749"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.network.clientpackets{RequestSendFriendMsg.java[RequestSendFriendMsg" modifiers="17" timestamp="1752959137985"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.model.actor.ai{CtrlIntention.java[CtrlIntention" modifiers="16385" timestamp="1752877296229"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.model{L2Skill.java[L2Skill" modifiers="1025" timestamp="1752877295464"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.model.actor.template{NpcTemplate.java[NpcTemplate[SkillType" modifiers="16393" timestamp="1752877299148"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.task{AAAAITask.java[AAAAITask" modifiers="1" timestamp="1753557941031"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.network.serverpackets{SkillList.java[SkillList[Skill" modifiers="8" timestamp="1752877309769"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.skills{DocumentSkill.java[DocumentSkill[Skill" modifiers="1" timestamp="1752877318209"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.model{L2Effect.java[L2Effect" modifiers="1025" timestamp="1752877295275"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dyn.elfocrash.roboto.ai{FFFakePlayerAI.java[FFFakePlayerAI" modifiers="1025" timestamp="1752877288725"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{FFFFakePlayerAI.java[FFFFakePlayerAI" modifiers="1025" timestamp="1753572186184"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayerNameManager.java[FFFFakePlayerNameManager" modifiers="16385" timestamp="1753575504042"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.commons.concurrent{ThreadPool.java[ThreadPool" modifiers="17" timestamp="1752877289301"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayerTaskManager.java[FFFFakePlayerTaskManager" modifiers="16385" timestamp="1753621559602"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver{GameServer.java[GameServer" modifiers="1" timestamp="1753621892553"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.instancemanager{CastleManager.java[CastleManager" modifiers="17" timestamp="1752877294411"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayerManager.java[FFFFakePlayerManager" modifiers="16385" timestamp="1753642794484"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto{FFFFakePlayer.java[FFFFakePlayer" modifiers="1" timestamp="1753473639335"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.admincommands{AAAAdminFFFFakePlayers.java[AAAAdminFFFFakePlayers" modifiers="1" timestamp="1753643953829"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{CCCCombatAI.java[CCCCombatAI" modifiers="1025" timestamp="1753573539593"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{SSSSoultakerAI.java[SSSSoultakerAI" modifiers="1" timestamp="1753557121746"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;net.sf.l2j.gameserver.data.xml{MapRegionData.java[MapRegionData" modifiers="1" timestamp="1752877291130"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{SSSStormScreamerAI.java[SSSStormScreamerAI" modifiers="1" timestamp="1753557225765"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{MMMMysticMuseAI.java[MMMMysticMuseAI" modifiers="1" timestamp="1753557286062"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{TTTTitanAI.java[TTTTitanAI" modifiers="1" timestamp="1753557350927"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{GGGGrandKhavatariAI.java[GGGGrandKhavatariAI" modifiers="1" timestamp="1753557407039"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{SSSSaggitariusAI.java[SSSSaggitariusAI" modifiers="1" timestamp="1753572842126"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{GGGGhostSentinelAI.java[GGGGhostSentinelAI" modifiers="1" timestamp="1753572832180"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{DDDDuelistAI.java[DDDDuelistAI" modifiers="1" timestamp="1753572818580"/>
+    <typeInfo handle="=aCis_gameserver/java&lt;dre.elfocrash.roboto.ai{CCCCardinalAI.java[CCCCardinalAI" modifiers="1" timestamp="1753557458371"/>
+</typeInfoHistroy>

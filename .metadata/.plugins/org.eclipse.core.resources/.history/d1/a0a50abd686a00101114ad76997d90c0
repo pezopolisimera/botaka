@@ -1,0 +1,75 @@
+package dre.elfocrash.roboto.ai;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import dre.elfocrash.roboto.FFFFakePlayer;
+import dre.elfocrash.roboto.ai.addon.IIIIConsumableSpender;
+import dre.elfocrash.roboto.helpers.FFFFakeHelpers;
+import dre.elfocrash.roboto.model.HHHHealingSpell;
+import dre.elfocrash.roboto.model.OOOOffensiveSpell;
+import dre.elfocrash.roboto.model.SSSSpellUsageCondition;
+import dre.elfocrash.roboto.model.SSSSupportSpell;
+
+import net.sf.l2j.gameserver.model.ShotType;
+
+import alt.elfocrash.roboto.helpers.FFFFFakeHelpers;
+
+public class DDDDuelistAI extends CCCCombatAI implements IIIIConsumableSpender {
+
+    public DDDDuelistAI(FFFFakePlayer character) {
+        super(character);
+    }
+
+    @Override
+    public void thinkAndAct() {
+        super.thinkAndAct();
+        setBusyThinking(true);
+        
+        applyDefaultBuffs();
+        handleShots();
+        selfSupportBuffs();
+        
+        tryTargetAttackerOrRandomMob(FFFFFakeHelpers.getTestTargetClass(), FFFFakeHelpers.getTestTargetRange());
+        tryAttackingUsingFighterOffensiveSkill();
+
+        setBusyThinking(false);
+    }
+
+    @Override
+    protected ShotType getShotType() {
+        return ShotType.SOULSHOT;
+    }
+
+    @Override
+    protected double changeOfUsingSkill() {
+        return 0.25;  // 25% πιθανότητα skill usage
+    }
+
+    @Override
+    protected List<OOOOffensiveSpell> getOffensiveSpells() {
+        List<OOOOffensiveSpell> offensiveSpells = new ArrayList<>();
+        offensiveSpells.add(new OOOOffensiveSpell(440, 10)); // Blade Hurricane, level 3, priority 10
+        return offensiveSpells;
+    }
+
+    @Override
+    protected List<SSSSupportSpell> getSelfSupportSpells() {
+        List<SSSSupportSpell> selfBuffs = new ArrayList<>();
+        selfBuffs.add(new SSSSupportSpell(139, 1)); // Dance of Warrior
+        selfBuffs.add(new SSSSupportSpell(297, 2)); // Dance of Concentration
+        selfBuffs.add(new SSSSupportSpell(440, SSSSpellUsageCondition.MISSINGCP, 1000, 3)); // Blade Hurricane conditional buff
+        return selfBuffs;
+    }
+
+    @Override
+    protected int[][] getBuffs() {
+        return FFFFakeHelpers.getFighterBuffs();
+    }
+
+    @Override
+    protected List<HHHHealingSpell> getHealingSpells() {
+        return Collections.emptyList();
+    }
+}

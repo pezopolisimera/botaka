@@ -1,0 +1,135 @@
+package dre.elfocrash.roboto.ai;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import dre.elfocrash.roboto.FFFFakePlayer;
+import dre.elfocrash.roboto.model.BBBBotSkill;
+import dre.elfocrash.roboto.model.HHHHealingSpell;
+import dre.elfocrash.roboto.model.OOOOffensiveSpell;
+import dre.elfocrash.roboto.model.SSSSupportSpell;
+
+import net.sf.l2j.commons.random.Rnd;
+import net.sf.l2j.gameserver.data.SkillTable;
+import net.sf.l2j.gameserver.geoengine.GeoEngine;
+import net.sf.l2j.gameserver.model.L2Skill;
+import net.sf.l2j.gameserver.model.ShotType;
+import net.sf.l2j.gameserver.model.actor.Creature;
+import net.sf.l2j.gameserver.model.zone.ZoneId;
+import net.sf.l2j.gameserver.model.actor.instance.Player;
+
+public abstract class CCCCombatAI extends FFFFakePlayerAI {
+
+    public CCCCombatAI(FFFFakePlayer character) {
+        super(character);
+    }
+
+    protected void tryAttackingUsingMageOffensiveSkill() {
+        if (_ffffakePlayer.getTarget() != null) {
+            BBBBotSkill botSkill = getRandomAvaiableMageSpellForTarget();
+            if (botSkill == null) {
+                System.out.println("[AI DEBUG] No available mage skill.");
+                return;
+            }
+
+            L2Skill skill = _ffffakePlayer.getSkill(botSkill.getSkillId());
+            if (skill != null) {
+                System.out.println("[AI DEBUG] Trying to cast: " + skill.getName());
+                try {
+                    castSpell(skill);
+                } catch (Exception e) {
+                    System.out.println("[AI ERROR] Failed to cast mage skill: " + skill.getName() + " - " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    protected void tryAttackingUsingFighterOffensiveSkill() {
+        if (_ffffakePlayer.getTarget() != null && _ffffakePlayer.getTarget() instanceof Creature) {
+            _ffffakePlayer.forceAutoAttack((Creature) _ffffakePlayer.getTarget());
+            if (Rnd.nextDouble() < changeOfUsingSkill()) {
+                if (getOffensiveSpells() != null && !getOffensiveSpells().isEmpty()) {
+                    L2Skill skill = getRandomAvaiableFighterSpellForTarget();
+                    if (skill != null) {
+                        System.out.println("[AI DEBUG] Fighter casting: " + skill.getName());
+                        try {
+                            castSpell(skill);
+                        } catch (Exception e) {
+                            System.out.println("[AI ERROR] Failed to cast fighter skill: " + skill.getName() + " - " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void thinkAndAct() {
+        System.out.println("[AI DEBUG] thinkAndAct() called");
+        handleDeath();
+    }
+
+    protected int getShotId() {
+        int level = _ffffakePlayer.getLevel();
+        if (level < 20) return getShotType() == ShotType.SOULSHOT ? 1835 : 3947;
+        if (level < 40) return getShotType() == ShotType.SOULSHOT ? 1463 : 3948;
+        if (level < 52) return getShotType() == ShotType.SOULSHOT ? 1464 : 3949;
+        if (level < 61) return getShotType() == ShotType.SOULSHOT ? 1465 : 3950;
+        if (level < 76) return getShotType() == ShotType.SOULSHOT ? 1466 : 3951;
+        return getShotType() == ShotType.SOULSHOT ? 1467 : 3952;
+    }
+
+    protected void handleShots() {
+        System.out.println("[AI DEBUG] handleShots() called");
+        if (_ffffakePlayer.getInventory().getItemByItemId(getShotId()) != null) {
+            if (_ffffakePlayer.getInventory().getItemByItemId(getShotId()).getCount() <= 20) {
+                _ffffakePlayer.getInventory().addItem("", getShotId(), 20000, _ffffakePlayer, null);
+            }
+        } else {
+            _ffffakePlayer.getInventory().addItem("", getShotId(), 20000, _ffffakePlayer, null);
+        }
+
+        if (_ffffakePlayer.getAutoSoulShot().isEmpty()) {
+            _ffffakePlayer.addAutoSoulShot(getShotId());
+            _ffffakePlayer.rechargeShots(true, true);
+        }
+    }
+
+    protected BBBBotSkill getRandomAvaiableMageSpellForTarget() {
+        List<OOOOffensiveSpell> spells = getOffensiveSpells().stream()
+            .sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority()))
+            .collect(Collectors.toList());
+
+        return waitAndPickAvailablePrioritisedSpell(spells, spells.size());
+    }
+
+    private BBBBotSkill waitAndPickAvailablePrioritisedSpell(List<? extends BBBBotSkill> spells, int size) {
+        int i = 0;
+        BBBBotSkill chosen = spells.get(i);
+        _ffffakePlayer.getCurrentSkill().setCtrlPressed(!_ffffakePlayer.getTarget().isInsideZone(ZoneId.PEACE));
+        L2Skill skill = _ffffakePlayer.getSkill(chosen.getSkillId());
+
+        if (skill.getCastRange() > 0 && !GeoEngine.getInstance().canSeeTarget(_ffffakePlayer, _ffffakePlayer.getTarget())) {
+            System.out.println("[AI DEBUG] Can't see target for skill: " + skill.getId());
+            moveToPawn(_ffffakePlayer.getTarget(), 100);
+            return null;
+        }
+
+        while (!_ffffakePlayer.checkUseMagicConditions(skill, true, false)) {
+            if (_ffffakePlayer.isDead() || _ffffakePlayer.isOutOfControl() || i >= size) return null;
+            skill = _ffffakePlayer.getSkill(spells.get(i).getSkillId());
+            chosen = spells.get(i);
+            System.out.println("[AI DEBUG] Trying alternative spell: " + skill.getId());
+            i++;
+        }
+
+        return chosen;
+    }
+
+    // Other unchanged abstract methods
+    protected abstract ShotType getShotType();
+    protected abstract List<OOOOffensiveSpell> getOffensiveSpells();
+    protected abstract List<HHHHealingSpell> getHealingSpells();
+    protected abstract List<SSSSupportSpell> getSelfSupportSpells();
+}
